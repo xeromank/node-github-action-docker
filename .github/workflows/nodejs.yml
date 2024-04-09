@@ -34,7 +34,7 @@ jobs:
         docker run -d -p 8080:8080 --name mynodeapp nodejs-app:latest
 
     # Test dependencies are typically installed via a project's package.json
-    # and should ideally not be handled separately in CI workflows.
+    # and should ideally not be handled separately in CI workflows. update.
     - name: Install test dependencies
       run: npm install mocha chai chai-http
     

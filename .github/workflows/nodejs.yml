@@ -29,6 +29,14 @@ jobs:
       run: |
         docker build . --file Dockerfile --tag nodejs-app:latest
         
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        file: ./Dockerfile
+        push: true
+        tags: xeroman/nodejs-app:${{ env.CURRENT_TIME }}
+        
     - name: Run the Docker container
       run: |
         docker run -d -p 8080:8080 --name mynodeapp nodejs-app:latest

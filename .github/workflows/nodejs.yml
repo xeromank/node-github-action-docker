@@ -20,22 +20,29 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+
+    # 현재 시간을 YYYYMMDDHHMMSS 형식으로 설정 update
+    - name: Get current time
+      run: echo "CURRENT_TIME=$(date +'%Y%m%d%H%M%S')" >> $GITHUB_ENV
+
+    - name: Get Git Commit Short HEAD
+      run: echo "TAG=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
     
     # Docker 로그인
     - name: Log in to Docker Hub
       run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
-    - name: Build the Docker image
-      run: |
-        docker build . --file Dockerfile --tag nodejs-app:latest
-        
     - name: Build and push Docker image
       uses: docker/build-push-action@v2
       with:
         context: .
         file: ./Dockerfile
         push: true
-        tags: xeroman/nodejs-app:${{ env.CURRENT_TIME }}
+        tags: xeroman/nodejs-app:${{ env.TAG }}
+
+    - name: Build the Docker image
+      run: |
+        docker build . --file Dockerfile --tag nodejs-app:latest
         
     - name: Run the Docker container
       run: |
